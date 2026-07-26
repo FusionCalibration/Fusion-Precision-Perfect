@@ -31,14 +31,9 @@ export default function AboutUsPage() {
               <h2 className="text-3xl font-bold text-slate-900 mb-6">Our Mission</h2>
               <div className="space-y-4 text-slate-600 leading-relaxed">
                 <p>
-                  At Fusion Precision Perfect, we believe that accuracy is not a luxury — it is the foundation of reliable measurement. Our calibration instruments are designed to deliver best-in-class specifications, making professional-grade calibration accessible to Indian laboratories, field engineers, and quality control teams.
+                  At Fusion Precision Perfect, we believe that accuracy is not a luxury — it is the foundation of reliable measurement, which leads to improvement. Our calibration instruments are designed to deliver best-in-class specifications, making professional-grade calibration accessible to calibration laboratories, field engineers, and quality control teams. We prioritise portability without compromising accuracy.
                 </p>
-                <p>
-                  Our flagship products — the F1000 Digital Frequency Calibrator and the R100X Resistance Calibrator series — are engineered to cover a wide workload, from bench-top lab setups to rugged on-site calibration. We prioritise portability without compromising accuracy.
-                </p>
-                <p>
-                  Every instrument carries our commitment: precise, dependable, and built to uphold the measurement standards that industry depends on.
-                </p>
+                
               </div>
             </div>
             <div className="flex-1 flex items-center justify-center">
@@ -63,23 +58,19 @@ export default function AboutUsPage() {
             {[
               {
                 icon: <Award className="w-10 h-10 text-amber-500" />,
-                title: "Best-in-Class Accuracy",
-                desc: "±0.005% for frequency and ±0.02% for resistance — industry-leading 1-year accuracy specifications.",
+                title: "Best-in-Class Accuracy"
               },
               {
                 icon: <Zap className="w-10 h-10 text-amber-500" />,
-                title: "Versatile Compatibility",
-                desc: "Compatible with frequency meters, counters, oscilloscopes, resistance meters, insulation testers, and more.",
+                title: "Versatile Compatibility"
               },
               {
                 icon: <Target className="w-10 h-10 text-amber-500" />,
-                title: "Portable & Lab-Ready",
-                desc: "Lightweight instruments supporting permanent, site, and mobile calibration without sacrificing precision.",
+                title: "Portable & Lab-Use"
               },
               {
                 icon: <Shield className="w-10 h-10 text-amber-500" />,
-                title: "Technical Support",
-                desc: "Dedicated pre-sales consultation and after-sales support from our engineering team.",
+                title: "Technical Support"
               },
             ].map((v, i) => (
               <div key={i} className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 text-center">

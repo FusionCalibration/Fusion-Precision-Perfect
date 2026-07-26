@@ -15,7 +15,7 @@ export function Footer() {
               <span className="text-slate-400 font-semibold text-[10px] tracking-[0.15em] uppercase">Precision Perfect</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed mb-6">
-              High-precision calibration instruments for frequency and resistance measurement. Trusted by professionals across laboratories and industries.
+              High-precision calibration instruments. Trusted by professionals across laboratories and industries.
             </p>
             <div className="flex gap-4">
               <a
@@ -48,8 +48,6 @@ export function Footer() {
               <li><Link href="/products/f1000" className="text-sm hover:text-amber-500 transition-colors">F1000 Frequency Calibrator</Link></li>
               <li><Link href="/products/r1000" className="text-sm hover:text-amber-500 transition-colors">R1000 Resistance Calibrator</Link></li>
               <li><Link href="/products/r1001" className="text-sm hover:text-amber-500 transition-colors">R1001 High Resistance Standard</Link></li>
-              <li><Link href="/category/Frequency Calibrators" className="text-sm hover:text-amber-500 transition-colors">Frequency Calibrators</Link></li>
-              <li><Link href="/category/Resistance Calibrators" className="text-sm hover:text-amber-500 transition-colors">Resistance Calibrators</Link></li>
             </ul>
           </div>
 

@@ -3,7 +3,7 @@ import { HeroCarousel } from '../components/HeroCarousel';
 import { TrustBadges } from '../components/TrustBadges';
 import { ProductCard } from '../components/ProductCard';
 import { MOCK_PRODUCTS } from '../data/mockData';
-import { ArrowRight, Zap, Gauge } from 'lucide-react';
+import { ArrowRight, Zap, Gauge, Sparkles } from 'lucide-react';
 import { Link } from 'wouter';
 
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -58,7 +58,8 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
+            {/* Real categories */}
             {['Frequency Calibrators', 'Resistance Calibrators'].map(category => (
               <Link
                 key={category}
@@ -71,6 +72,23 @@ export default function HomePage() {
                 <span className="font-semibold text-base text-center text-slate-900">{category}</span>
               </Link>
             ))}
+
+            {/* Coming Soon card */}
+            <div className="flex flex-col items-center justify-center p-8 bg-slate-900 rounded-xl border border-slate-700 relative overflow-hidden cursor-default select-none">
+              {/* Shimmer pulse background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-amber-600/10 animate-pulse" />
+              {/* Orbit ring */}
+              <div className="relative mb-4">
+                <div className="w-12 h-12 rounded-full border-2 border-amber-500/30 flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-amber-400 animate-spin" style={{ animationDuration: '4s' }} />
+                </div>
+              </div>
+              {/* Animated text */}
+              <span className="font-black text-lg tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 animate-pulse">
+                Coming Soon
+              </span>
+              <span className="text-xs text-slate-500 mt-2 text-center">New instruments in development</span>
+            </div>
           </div>
         </div>
       </section>

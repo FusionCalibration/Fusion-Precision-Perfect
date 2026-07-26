@@ -4,12 +4,13 @@ import { Link, useLocation } from 'wouter';
 import { useCart } from '../context/CartContext';
 import { MOCK_PRODUCTS } from '../data/mockData';
 
-function FusionLogo({ className = '' }: { className?: string }) {
+function FusionLogo() {
   return (
-    <div className={`flex flex-col leading-none select-none ${className}`}>
-      <span className="text-[#C0392B] font-black text-xl tracking-tight">FUSION</span>
-      <span className="text-slate-300 font-semibold text-[9px] tracking-[0.15em] uppercase">Precision Perfect</span>
-    </div>
+    <img
+      src="/fusion-logo.png"
+      alt="Fusion Precision Perfect"
+      className="h-9 w-auto object-contain"
+    />
   );
 }
 
@@ -44,8 +45,10 @@ export function Header() {
         </button>
 
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-          <FusionLogo />
+        <Link href="/" className="flex items-center flex-shrink-0">
+          <div className="bg-white rounded-md px-3 py-1.5">
+            <FusionLogo />
+          </div>
         </Link>
 
         {/* Desktop Nav */}
@@ -120,7 +123,9 @@ export function Header() {
           <div className="fixed inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)} />
           <div className="w-64 bg-slate-900 h-full relative z-10 flex flex-col shadow-2xl">
             <div className="p-4 flex items-center justify-between border-b border-slate-800">
-              <FusionLogo />
+              <div className="bg-white rounded-md px-3 py-1.5">
+                <FusionLogo />
+              </div>
               <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-400 hover:text-white">
                 <X className="h-5 w-5" />
               </button>

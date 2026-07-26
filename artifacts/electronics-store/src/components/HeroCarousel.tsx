@@ -68,14 +68,6 @@ export function HeroCarousel() {
                 transition={{ delay: 0.25, duration: 0.5 }}
                 className="max-w-2xl"
               >
-                {/* Fusion Logo */}
-                <div className="inline-flex mb-6 bg-white rounded-lg px-4 py-2 shadow-lg">
-                  <img
-                    src="/fusion-logo.png"
-                    alt="Fusion Precision Perfect"
-                    className="h-10 object-contain"
-                  />
-                </div>
                 <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
                   {SLIDES[current].title}
                 </h1>
