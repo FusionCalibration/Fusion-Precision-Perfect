@@ -2,131 +2,136 @@ import React from 'react';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { TrustBadges } from '../components/TrustBadges';
 import { ProductCard } from '../components/ProductCard';
-import { MOCK_PRODUCTS, CATEGORIES } from '../data/mockData';
-import { Cpu, Zap, Wifi, PenTool, Battery, MonitorPlay, ArrowRight, Quote } from 'lucide-react';
+import { MOCK_PRODUCTS } from '../data/mockData';
+import { ArrowRight, Zap, Gauge } from 'lucide-react';
 import { Link } from 'wouter';
 
 const categoryIcons: Record<string, React.ReactNode> = {
-  "Sensors": <Zap className="w-8 h-8" />,
-  "Arduino": <Cpu className="w-8 h-8" />,
-  "Raspberry Pi": <MonitorPlay className="w-8 h-8" />,
-  "Robotics & DIY": <PenTool className="w-8 h-8" />,
-  "3D Printing": <Wifi className="w-8 h-8" />,
-  "Modules & ICs": <Battery className="w-8 h-8" />
+  "Frequency Calibrators": <Zap className="w-8 h-8" />,
+  "Resistance Calibrators": <Gauge className="w-8 h-8" />,
 };
 
 export default function HomePage() {
-  const featuredProducts = MOCK_PRODUCTS.slice(0, 8);
-
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="bg-amber-500 text-slate-900 text-sm font-medium py-2 text-center">
-        ⚡ Free shipping on orders above ₹999 across India
-      </div>
-
       <HeroCarousel />
       <TrustBadges />
+
+      {/* YouTube Video Section */}
+      <section className="py-16 bg-slate-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">See Our Instruments in Action</h2>
+            <p className="text-slate-400">Watch our latest demonstrations and product overviews</p>
+          </div>
+          <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
+            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src="https://www.youtube.com/embed/e5K-EQZZntw?autoplay=1&mute=1&loop=1&playlist=e5K-EQZZntw&modestbranding=1&rel=0"
+                title="Fusion Precision Perfect – Product Demo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+          <div className="text-center mt-6">
+            <a
+              href="https://www.youtube.com/@FusionPrecisionPerfect"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 font-medium transition-colors"
+            >
+              Visit our YouTube Channel <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </section>
 
       {/* Categories Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Shop by Category</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Product Categories</h2>
             <Link href="/products" className="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
               View All <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {CATEGORIES.map(category => (
-              <Link 
-                key={category} 
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
+            {['Frequency Calibrators', 'Resistance Calibrators'].map(category => (
+              <Link
+                key={category}
                 href={`/category/${category}`}
-                className="flex flex-col items-center justify-center p-6 bg-slate-50 rounded-xl border border-slate-200 hover:border-amber-500 hover:shadow-md transition-all group"
+                className="flex flex-col items-center justify-center p-8 bg-slate-50 rounded-xl border border-slate-200 hover:border-amber-500 hover:shadow-md transition-all group"
               >
                 <div className="text-slate-600 group-hover:text-amber-500 transition-colors mb-3">
-                  {categoryIcons[category] || <Cpu className="w-8 h-8" />}
+                  {categoryIcons[category] || <Zap className="w-8 h-8" />}
                 </div>
-                <span className="font-semibold text-sm text-center text-slate-900">{category}</span>
+                <span className="font-semibold text-base text-center text-slate-900">{category}</span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Products */}
+      {/* Products Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Featured Products</h2>
-            <p className="text-slate-500">Handpicked components for your next project</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Our Instruments</h2>
+            <p className="text-slate-500">Precision calibration tools built for professionals</p>
           </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {featuredProducts.map(product => (
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {MOCK_PRODUCTS.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Promo Banner */}
-      <section className="py-12 bg-slate-900 text-white">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold mb-4">Are you a student or educator?</h2>
-            <p className="text-slate-300 text-lg mb-6">
-              Get special discounts on bulk orders for college projects, hackathons, and lab setups. We provide official GST invoices and technical support.
-            </p>
-            <Link href="/contact" className="inline-block bg-white text-slate-900 font-bold px-6 py-3 rounded-md hover:bg-slate-100 transition-colors">
-              Contact Sales
-            </Link>
-          </div>
-          <div className="w-full md:w-1/3 aspect-video bg-slate-800 rounded-lg overflow-hidden relative">
-             <img src="https://images.unsplash.com/photo-1555664424-778a1e5e1b48?w=800&q=80" alt="Workspace" className="w-full h-full object-cover opacity-60" />
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 bg-white">
+      {/* Why Choose Us Banner */}
+      <section className="py-16 bg-slate-900 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-12">Trusted by Indian Makers</h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">Why Choose Fusion Precision Perfect?</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { text: "Got genuine Arduino Uno within 2 days. The packaging was excellent and parts were exactly as described.", author: "Rahul M.", role: "Engineering Student" },
-              { text: "Best prices for Raspberry Pi accessories in India. Their customer support even helped me troubleshoot a sensor issue over WhatsApp.", author: "Priya S.", role: "Hobbyist" },
-              { text: "We order our lab supplies exclusively from MakerStore now. The GST invoicing is seamless and quality is always top-notch.", author: "Dr. Verma", role: "Robotics Professor" }
-            ].map((t, i) => (
-              <div key={i} className="bg-slate-50 p-8 rounded-2xl relative">
-                <Quote className="absolute top-4 right-4 w-12 h-12 text-slate-200" />
-                <p className="text-slate-700 relative z-10 mb-6 italic">"{t.text}"</p>
-                <div>
-                  <div className="font-bold text-slate-900">{t.author}</div>
-                  <div className="text-sm text-slate-500">{t.role}</div>
-                </div>
+              { title: "Best-in-Class Accuracy", desc: "Industry-leading accuracy specifications — ±0.005% for frequency and ±0.02% for resistance calibration." },
+              { title: "Portable & Lab-Grade", desc: "Designed for permanent lab setups, on-site calibration, and field service — one instrument, every application." },
+              { title: "Versatile Compatibility", desc: "Calibrates frequency meters, resistance meters, insulation testers, oscilloscopes, multi-meters, and more." },
+              { title: "Dual Power Modes", desc: "Operates via rechargeable battery (~4 hrs) or universal AC mains — calibrate anywhere without compromise." },
+              { title: "GST Invoice Provided", desc: "All purchases include official GST invoices suitable for institutional procurement and audits." },
+              { title: "Expert Technical Support", desc: "Our engineering team provides dedicated pre-sales and after-sales technical assistance." },
+            ].map((item, i) => (
+              <div key={i} className="bg-slate-800/60 rounded-xl p-6 border border-slate-700">
+                <h3 className="font-bold text-amber-400 text-lg mb-2">{item.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Newsletter */}
+      {/* Contact CTA */}
       <section className="py-20 bg-amber-500">
         <div className="container mx-auto px-4 text-center max-w-2xl">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">Never Miss a Deal</h2>
-          <p className="text-slate-800 mb-8">Subscribe to get updates on new arrivals, tutorials, and exclusive discounts.</p>
-          <form className="flex flex-col sm:flex-row gap-2" onSubmit={(e) => e.preventDefault()}>
-            <input 
-              type="email" 
-              placeholder="Enter your email address" 
-              className="flex-1 px-4 py-3 rounded-md border-0 focus:ring-2 focus:ring-slate-900"
-            />
-            <button className="bg-slate-900 text-white font-bold px-8 py-3 rounded-md hover:bg-slate-800 transition-colors">
-              Subscribe
-            </button>
-          </form>
+          <h2 className="text-3xl font-bold text-slate-900 mb-4">Get a Quote or Technical Consultation</h2>
+          <p className="text-slate-800 mb-8">Contact our team for pricing, custom orders, or expert guidance on selecting the right calibrator for your application.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="mailto:admin@fusionprecisionperfect.com"
+              className="bg-slate-900 text-white font-bold px-8 py-3 rounded-md hover:bg-slate-800 transition-colors"
+            >
+              Email Us
+            </a>
+            <Link
+              href="/contact"
+              className="bg-white text-slate-900 font-bold px-8 py-3 rounded-md hover:bg-slate-100 transition-colors"
+            >
+              Contact Form
+            </Link>
+          </div>
         </div>
       </section>
     </div>

@@ -6,25 +6,28 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 const SLIDES = [
   {
     id: 1,
-    title: "Arduino & Microcontrollers",
-    subtitle: "The brain of your next big project.",
-    image: "https://images.unsplash.com/photo-1608564697071-ddf911d81370?w=1200&q=80",
-    link: "/category/Arduino"
+    title: "F1000 Digital Frequency Calibrator",
+    subtitle: "Up to 1 MHz range. ±0.005% best-in-class accuracy.",
+    image: "/products/f1000.jpg",
+    link: "/products/f1000",
+    overlay: "bg-slate-900/70",
   },
   {
     id: 2,
-    title: "Sensors & Modules",
-    subtitle: "Give your creations the ability to see, hear, and feel.",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
-    link: "/category/Sensors"
+    title: "R1000 Precision Resistance Calibrator",
+    subtitle: "10 mΩ to 100 MΩ range. ±0.02% accuracy. Portable & lab-ready.",
+    image: "/products/r1000.jpg",
+    link: "/products/r1000",
+    overlay: "bg-slate-900/60",
   },
   {
     id: 3,
-    title: "Robotics & DIY",
-    subtitle: "Motors, chassis, and everything that moves.",
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1200&q=80",
-    link: "/category/Robotics & DIY"
-  }
+    title: "R1001 High Resistance Standard Box",
+    subtitle: "1 MΩ to 20 GΩ at 1 kV. Ideal for insulation testers and meggers.",
+    image: "/products/r1001.jpg",
+    link: "/products/r1001",
+    overlay: "bg-slate-900/65",
+  },
 ];
 
 export function HeroCarousel() {
@@ -33,7 +36,7 @@ export function HeroCarousel() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev === SLIDES.length - 1 ? 0 : prev + 1));
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
   }, []);
 
@@ -41,41 +44,46 @@ export function HeroCarousel() {
   const prev = () => setCurrent(current === 0 ? SLIDES.length - 1 : current - 1);
 
   return (
-    <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden bg-slate-900">
+    <div className="relative w-full h-[380px] md:h-[480px] lg:h-[560px] overflow-hidden bg-slate-900">
       <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={current}
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7 }}
           className="absolute inset-0"
         >
-          <div className="absolute inset-0 bg-slate-900/60 z-10" />
-          <img 
-            src={SLIDES[current].image} 
+          <div className={`absolute inset-0 ${SLIDES[current].overlay} z-10`} />
+          <img
+            src={SLIDES[current].image}
             alt={SLIDES[current].title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 z-20 flex items-center justify-center text-center md:text-left md:justify-start">
-            <div className="container mx-auto px-4 md:px-12 lg:px-24">
+          <div className="absolute inset-0 z-20 flex items-center">
+            <div className="container mx-auto px-6 md:px-12 lg:px-20">
               <motion.div
-                initial={{ y: 20, opacity: 0 }}
+                initial={{ y: 24, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+                transition={{ delay: 0.25, duration: 0.5 }}
                 className="max-w-2xl"
               >
-                <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+                {/* Brand pill */}
+                <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40">
+                  <span className="text-[#C0392B] font-black text-sm tracking-tight">FUSION</span>
+                  <span className="text-amber-300 text-xs font-semibold tracking-widest uppercase">Precision Perfect</span>
+                </div>
+                <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
                   {SLIDES[current].title}
                 </h1>
-                <p className="text-lg md:text-2xl text-slate-200 mb-8 font-light">
+                <p className="text-base md:text-xl text-slate-200 mb-8 font-light leading-relaxed">
                   {SLIDES[current].subtitle}
                 </p>
-                <Link 
+                <Link
                   href={SLIDES[current].link}
                   className="inline-flex items-center justify-center px-8 py-3.5 text-base font-bold text-slate-900 bg-amber-500 rounded-md hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/20"
                 >
-                  Shop Now
+                  View Specifications
                 </Link>
               </motion.div>
             </div>
@@ -83,13 +91,13 @@ export function HeroCarousel() {
         </motion.div>
       </AnimatePresence>
 
-      <button 
+      <button
         onClick={prev}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm transition-all"
       >
         <ChevronLeft className="h-6 w-6" />
       </button>
-      <button 
+      <button
         onClick={next}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm transition-all"
       >
@@ -101,8 +109,8 @@ export function HeroCarousel() {
           <button
             key={idx}
             onClick={() => setCurrent(idx)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              current === idx ? 'bg-amber-500 w-6' : 'bg-white/50'
+            className={`h-2 rounded-full transition-all ${
+              current === idx ? 'bg-amber-500 w-6' : 'bg-white/50 w-2'
             }`}
           />
         ))}

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Star, ShoppingCart } from 'lucide-react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
+import { Star, Phone } from 'lucide-react';
 import { Product } from '../data/mockData';
 import { useCart } from '../context/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -12,85 +12,92 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const [, navigate] = useLocation();
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleEnquiry = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!product.inStock) return;
-    
+    e.stopPropagation();
     addToCart({
       productId: product.id,
       name: product.name,
-      price: product.price,
+      price: 0,
       quantity: 1,
-      image: product.images[0]
+      image: product.images[0],
     });
-
     toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
+      title: "Added to Enquiry",
+      description: `${product.name} added. Contact us for pricing.`,
     });
   };
 
-  const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+  const handleCall = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = 'tel:+918607620062';
+  };
 
   return (
-    <Link href={`/products/${product.id}`} className="group flex flex-col bg-white border border-slate-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
-      <div className="relative aspect-square overflow-hidden bg-slate-100">
-        <img 
-          src={product.images[0]} 
+    <div
+      className="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg hover:border-amber-300 transition-all duration-200 cursor-pointer flex flex-col h-full"
+      onClick={() => navigate(`/products/${product.id}`)}
+    >
+      {/* Image */}
+      <div className="relative bg-slate-100 aspect-[4/3] overflow-hidden">
+        <img
+          src={product.images[0]}
           alt={product.name}
-          className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        {discount > 0 && (
-          <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-            -{discount}%
-          </div>
-        )}
-        {!product.inStock && (
-          <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
-            <span className="bg-slate-900 text-white font-bold px-3 py-1 rounded text-sm">
-              Out of Stock
-            </span>
-          </div>
+        {product.inStock ? (
+          <span className="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">
+            In Stock
+          </span>
+        ) : (
+          <span className="absolute top-3 left-3 bg-slate-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">
+            Out of Stock
+          </span>
         )}
       </div>
-      
-      <div className="p-4 flex flex-col flex-1">
-        <div className="text-xs text-slate-500 mb-1">{product.category}</div>
-        <h3 className="font-semibold text-slate-900 line-clamp-2 mb-2 flex-1 group-hover:text-amber-600 transition-colors">
+
+      {/* Info */}
+      <div className="p-5 flex flex-col flex-1">
+        <div className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-1">{product.category}</div>
+        <h3 className="font-bold text-slate-900 text-base leading-snug mb-2 group-hover:text-amber-600 transition-colors flex-1">
           {product.name}
         </h3>
-        
-        <div className="flex items-center gap-1 mb-3">
-          <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-          <span className="text-sm font-medium text-slate-700">{product.rating}</span>
-          <span className="text-xs text-slate-500">({product.reviewsCount})</span>
-        </div>
-        
-        <div className="flex items-end justify-between mt-auto">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-slate-900">₹{product.price}</span>
-              {product.originalPrice > product.price && (
-                <span className="text-sm text-slate-400 line-through">₹{product.originalPrice}</span>
-              )}
-            </div>
-            <p className="text-[10px] text-slate-500 leading-none mt-1">incl. GST</p>
+
+        {/* Rating */}
+        <div className="flex items-center gap-1.5 mb-4">
+          <div className="flex items-center gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? 'text-amber-400 fill-amber-400' : 'text-slate-300'}`}
+              />
+            ))}
           </div>
-          
-          <button 
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm ${
-              product.inStock 
-                ? 'bg-amber-500 text-slate-900 hover:bg-amber-400' 
-                : 'bg-slate-100 text-slate-400 cursor-not-allowed'
-            }`}
-          >
-            <ShoppingCart className="w-5 h-5" />
-          </button>
+          <span className="text-xs text-slate-500">({product.reviewsCount} reviews)</span>
+        </div>
+
+        {/* Price / CTA */}
+        <div className="mt-auto space-y-2">
+          <div className="text-sm font-semibold text-slate-700">Contact for Pricing</div>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={handleEnquiry}
+              className="bg-amber-500 text-slate-900 font-bold text-sm py-2 rounded-md hover:bg-amber-400 transition-colors"
+            >
+              Add Enquiry
+            </button>
+            <button
+              onClick={handleCall}
+              className="flex items-center justify-center gap-1 border border-slate-300 text-slate-700 font-semibold text-sm py-2 rounded-md hover:border-amber-500 hover:text-amber-600 transition-colors"
+            >
+              <Phone className="w-3.5 h-3.5" /> Call
+            </button>
+          </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
