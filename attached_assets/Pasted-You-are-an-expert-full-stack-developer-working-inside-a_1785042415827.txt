@@ -1,0 +1,104 @@
+You are an expert full-stack developer working inside a Replit environment. Build a complete, production-ready React + Vite + Tailwind CSS prototype for an electronics, robotics, and DIY components e-commerce website.
+
+---
+
+### 🎯 PROJECT OVERVIEW & DOMAIN CONFIGURATION
+- **Domain Placeholder:** [yourdomain.com] (used in site metadata, footer, contact page, README, and support emails: support@[yourdomain.com]).
+- **Store Name Placeholder:** [Your Store Name]
+- **Target Audience:** Indian makers, students, hobbyists, and engineers.
+- **Pricing Format:** Prices in ₹ (INR) with explicit "incl. GST" labels across all product cards and checkout components.
+- **No Third-Party Branding:** Do NOT use techtonics.in or any external proprietary logos/names anywhere in code, assets, or metadata.
+
+---
+
+### 🚨 KEY STRUCTURAL REQUIREMENT
+The main navigation **MUST NOT** include "Educational Kits". Replace it directly with **"Product Details"** in the exact second position between "Home" and "About Us".
+- **Navigation Flow:** Home ➔ Product Details ➔ About Us ➔ Contact Us
+- Clicking "Product Details" in the header routes to the main detailed product view experience.
+- Do NOT include "Educational Kits" as a menu item, category, or taxonomy label anywhere in the app.
+
+---
+
+### 📂 FILE STRUCTURE TO CREATE IN REPLIT
+
+Ensure the project is set up cleanly using Vite + Tailwind CSS with the following modular structure:
+
+.
+├── package.json
+├── index.html
+├── vite.config.js
+├── tailwind.config.js
+├── postcss.config.js
+├── README.md
+└── src/
+    ├── main.jsx
+    ├── App.jsx
+    ├── index.css
+    ├── context/
+    │   └── CartContext.jsx
+    ├── data/
+    │   └── mockData.js
+    ├── components/
+    │   ├── Header.jsx
+    │   ├── Footer.jsx
+    │   ├── Navigation.jsx
+    │   ├── SidebarTaxonomy.jsx
+    │   ├── ProductCard.jsx
+    │   ├── TrustBadges.jsx
+    │   └── HeroCarousel.jsx
+    └── pages/
+        ├── HomePage.jsx
+        ├── ProductDetailPage.jsx
+        ├── CategoryPage.jsx
+        ├── AboutUsPage.jsx
+        ├── ContactUsPage.jsx
+        ├── CartPage.jsx
+        └── LoginPage.jsx
+
+---
+
+### 🛠️ TECHNICAL SPECIFICATIONS
+
+#### 1. Color Palette & UI Design System (Tailwind CSS)
+- **Primary Color:** Deep Industrial Slate/Navy (`slate-900` / `#0F172A`)
+- **Accent Color:** High-Energy Amber/Orange (`amber-500` & `orange-600` for primary action buttons)
+- **Background:** Clean Soft Neutral (`slate-50` / `#F8FAFC`)
+- **Borders:** Crisp Cool Gray (`slate-200` / `#E2E8F0`)
+- **Layout:** Fully responsive across Mobile, Tablet, and Desktop. Include a mobile drawer/hamburger menu with the exact same navigation hierarchy.
+
+#### 2. Mock Data Taxonomy (`src/data/mockData.js`)
+Create at least 20 realistic product objects across these categories:
+- **Sensors:** Touch Sensor Switch, Accelerometer Sensors, Light or Color Sensor, Distance or Proximity Sensors, Humidity and Temperature Sensors, Biometric – EKG/EMG Sensors, Gas and Dust Sensors, Water and Moisture Sensors, Voltage and Current Sensors, Flex and Force Sensors, Sound and Voice Sensors, Rotary Encoders.
+- **Arduino:** Original Arduino Boards, Arduino Boards (compatible/clones), Shields for Arduino.
+- **Raspberry Pi:** Raspberry Pi Boards, Raspberry Pi Accessories.
+- **Robotics & DIY:** Chassis, Motors, Wheels, Motor Drivers.
+- **3D Printing Parts:** Nozzles, Extruders, Belts, Hotends.
+- **Modules & ICs:** Relay Modules, Motor Controllers, Voltage Regulators.
+
+*Product schema attributes:* `id`, `name`, `category`, `subcategory`, `price` (number), `originalPrice`, `rating`, `reviewsCount`, `inStock` (boolean), `sku`, `description`, `specs` (key-value pairs), `images` (array of tech placeholder URLs from Unsplash), and `tags`.
+
+#### 3. State & Commerce Logic (`src/context/CartContext.jsx`)
+- Client-side shopping cart managed via React Context with LocalStorage sync.
+- Methods required: `addToCart`, `removeFromCart`, `updateQuantity`, `clearCart`, `getCartTotal`, `getCartCount`.
+
+#### 4. Page Breakdown & Features
+- **Header & Navigation (`Header.jsx` / `Navigation.jsx`):** Brand logo text placeholder, instant search auto-suggest, cart badge icon, login quick-link, and hamburger navigation for small screens.
+- **Homepage (`HomePage.jsx`):** Rotating Hero Banner, "Free shipping on orders above ₹999" promo bar, Trust Badges (10am–9pm support, secure payments, fast delivery), category tiles, featured best-sellers, customer testimonials, and newsletter signup strip.
+- **Product Details Page (`ProductDetailPage.jsx`):** Interactive gallery, pricing display in ₹ with "incl. GST" tag, stock indicator, quantity modifier, tabbed info (Description, Spec Table, Reviews), breadcrumbs, and "Related Products" carousel.
+- **Category / Shop Page (`CategoryPage.jsx`):** Interactive sidebar category filter, price range slider, in-stock filter, and sorting options.
+- **About Us (`AboutUsPage.jsx`):** Maker community background and technical quality guarantees.
+- **Contact Us (`ContactUsPage.jsx`):** Support form, WhatsApp chat CTA, operating hours, support email `support@[yourdomain.com]`, and map placeholder.
+- **Cart & Checkout (`CartPage.jsx`):** Item list, quantity adjustments, GST tax breakdown, free shipping target progress bar, and a mock checkout modal.
+- **Login / Register (`LoginPage.jsx`):** Tabbed auth UI state.
+
+---
+
+### 📑 DELIVERABLES
+1. Generate all required component and styling files, and update `package.json` with standard dependencies (`react`, `react-dom`, `react-router-dom`, `lucide-react`, `tailwindcss`, `autoprefixer`, `postcss`).
+2. Include a `README.md` covering:
+   - Replit setup instructions (running dev server on port 3000 / default Vite port).
+   - Guidance on swapping mock data for live products.
+   - Instructions for linking `[yourdomain.com]` via Replit's "Custom Domains" settings or external static hosting (Vercel/Netlify/Cloudflare Pages).
+   - Explicit confirmation that "Educational Kits" has been replaced with "Product Details".
+
+Start building the complete project now.
