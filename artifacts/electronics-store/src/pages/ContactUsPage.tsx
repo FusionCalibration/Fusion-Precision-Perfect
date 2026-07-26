@@ -2,21 +2,41 @@ import React, { useState } from 'react';
 import { Phone, Mail, Clock, MessageSquare, Send, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+const TO_EMAIL = 'admin@fusionprecisionperfect.com';
+
 export default function ContactUsPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: 'Product Enquiry / Pricing',
+    message: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const body = encodeURIComponent(
+      `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\n\n${form.message}`
+    );
+    const subject = encodeURIComponent(`[FPP Enquiry] ${form.subject}`);
+    window.location.href = `mailto:${TO_EMAIL}?subject=${subject}&body=${body}`;
+
     setTimeout(() => {
       setIsSubmitting(false);
       toast({
-        title: "Message Sent!",
-        description: "We'll get back to you within 24 hours.",
+        title: "Opening your email client…",
+        description: `Your enquiry will be sent to ${TO_EMAIL}`,
       });
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
+      setForm({ name: '', email: '', phone: '', subject: 'Product Enquiry / Pricing', message: '' });
+    }, 800);
   };
 
   return (
@@ -61,10 +81,10 @@ export default function ContactUsPage() {
                 <div>
                   <h3 className="font-bold text-slate-900 mb-2">Email Us</h3>
                   <a
-                    href="mailto:admin@fusionprecisionperfect.com"
+                    href={`mailto:${TO_EMAIL}`}
                     className="block text-sm text-slate-600 hover:text-amber-600 transition-colors mb-1 break-all"
                   >
-                    admin@fusionprecisionperfect.com
+                    {TO_EMAIL}
                   </a>
                   <a
                     href="mailto:fusion.precision.perfeect@outlook.com"
@@ -112,27 +132,59 @@ export default function ContactUsPage() {
           {/* Contact Form */}
           <div className="md:col-span-2">
             <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Send an Enquiry</h2>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Send an Enquiry</h2>
+              <p className="text-sm text-slate-500 mb-6">
+                Your message will be sent directly to{' '}
+                <span className="font-semibold text-slate-700">{TO_EMAIL}</span>
+              </p>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">Your Name</label>
-                    <input required type="text" className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none" placeholder="John Doe" />
+                    <input
+                      required
+                      type="text"
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+                      placeholder="John Doe"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
-                    <input required type="email" className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none" placeholder="john@example.com" />
+                    <input
+                      required
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+                      placeholder="john@example.com"
+                    />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
-                  <input type="tel" className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none" placeholder="+91 98765 43210" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+                    placeholder="+91 98765 43210"
+                  />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">Subject</label>
-                  <select className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none bg-white">
+                  <select
+                    name="subject"
+                    value={form.subject}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none bg-white"
+                  >
                     <option>Product Enquiry / Pricing</option>
                     <option>Technical Support</option>
                     <option>Bulk / Institutional Order</option>
@@ -143,7 +195,15 @@ export default function ContactUsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">Message</label>
-                  <textarea required rows={5} className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none resize-none" placeholder="Describe your requirement or question in detail..."></textarea>
+                  <textarea
+                    required
+                    rows={5}
+                    name="message"
+                    value={form.message}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none resize-none"
+                    placeholder="Describe your requirement or question in detail..."
+                  />
                 </div>
 
                 <button
@@ -151,9 +211,12 @@ export default function ContactUsPage() {
                   disabled={isSubmitting}
                   className="w-full bg-slate-900 text-white font-bold py-4 rounded-md hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
                 >
-                  {isSubmitting ? 'Sending...' : <><Send className="w-5 h-5" /> Send Enquiry</>}
+                  {isSubmitting ? 'Opening email…' : <><Send className="w-5 h-5" /> Send Enquiry</>}
                 </button>
-                <p className="text-xs text-center text-slate-500">We typically respond within 24 hours on working days.</p>
+                <p className="text-xs text-center text-slate-500">
+                  Clicking send will open your email client with this message pre-filled to {TO_EMAIL}.<br />
+                  We typically respond within 24 hours on working days.
+                </p>
               </form>
             </div>
           </div>

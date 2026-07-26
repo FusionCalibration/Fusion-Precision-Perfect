@@ -97,12 +97,18 @@ export default function HomePage() {
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">Why Choose Fusion Precision Perfect?</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { title: "Best-in-Class Accuracy", desc: "Industry-leading accuracy specifications — ±0.005% for frequency and ±0.02% for resistance calibration." },
-              { title: "Portable & Lab-Grade", desc: "Designed for permanent lab setups, on-site calibration, and field service — one instrument, every application." },
-              { title: "Versatile Compatibility", desc: "Calibrates frequency meters, resistance meters, insulation testers, oscilloscopes, multi-meters, and more." },
-              { title: "Dual Power Modes", desc: "Operates via rechargeable battery (~4 hrs) or universal AC mains — calibrate anywhere without compromise." },
-              { title: "GST Invoice Provided", desc: "All purchases include official GST invoices suitable for institutional procurement and audits." },
-              { title: "Expert Technical Support", desc: "Our engineering team provides dedicated pre-sales and after-sales technical assistance." },
+              {
+                title: "Best-in-Class Accuracy",
+                desc: "Definitive precision for the world's most demanding labs.",
+              },
+              {
+                title: "Portable & Lab-Grade",
+                desc: "Designed for permanent, site & mobile testing calibration.",
+              },
+              {
+                title: "Expert Technical Support",
+                desc: "Our engineering team provides dedicated pre-sales and after-sales technical assistance.",
+              },
             ].map((item, i) => (
               <div key={i} className="bg-slate-800/60 rounded-xl p-6 border border-slate-700">
                 <h3 className="font-bold text-amber-400 text-lg mb-2">{item.title}</h3>

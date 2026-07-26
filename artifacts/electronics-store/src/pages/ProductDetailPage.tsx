@@ -4,17 +4,35 @@ import { MOCK_PRODUCTS } from '../data/mockData';
 import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
 import { useToast } from '@/hooks/use-toast';
-import { Star, Truck, Shield, ChevronRight, Check, Minus, Plus, ShoppingCart } from 'lucide-react';
+import { ChevronRight, Check, FileText, Download } from 'lucide-react';
+
+// Map each product to which catalogues apply
+const PRODUCT_CATALOGUES: Record<string, { name: string; file: string }[]> = {
+  f1000: [
+    { name: "F1000 Digital Frequency Calibrator – Product Catalogue", file: "/catalogues/FPP-F1000-Catalogue.pdf" },
+  ],
+  r1000: [
+    { name: "R1000 & R1001 Resistance Calibrators – Product Catalogue", file: "/catalogues/FPP-R1000-R1001-Catalogue.pdf" },
+  ],
+  r1001: [
+    { name: "R1000 & R1001 Resistance Calibrators – Product Catalogue", file: "/catalogues/FPP-R1000-R1001-Catalogue.pdf" },
+  ],
+};
+
+// Fallback: show both for unknown products
+const ALL_CATALOGUES = [
+  { name: "F1000 Digital Frequency Calibrator – Product Catalogue", file: "/catalogues/FPP-F1000-Catalogue.pdf" },
+  { name: "R1000 & R1001 Resistance Calibrators – Product Catalogue", file: "/catalogues/FPP-R1000-R1001-Catalogue.pdf" },
+];
 
 export default function ProductDetailPage() {
   const { id } = useParams();
   const { addToCart } = useCart();
   const { toast } = useToast();
-  
+
   const product = MOCK_PRODUCTS.find(p => p.id === id);
   const [activeImage, setActiveImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description');
+  const [activeTab, setActiveTab] = useState<'description' | 'specs'>('description');
 
   if (!product) {
     return (
@@ -26,19 +44,19 @@ export default function ProductDetailPage() {
   }
 
   const relatedProducts = MOCK_PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
-  const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+  const catalogues = PRODUCT_CATALOGUES[product.id] ?? ALL_CATALOGUES;
 
-  const handleAddToCart = () => {
+  const handleAddEnquiry = () => {
     addToCart({
       productId: product.id,
       name: product.name,
-      price: product.price,
-      quantity,
-      image: product.images[0]
+      price: 0,
+      quantity: 1,
+      image: product.images[0],
     });
     toast({
-      title: "Added to cart",
-      description: `${quantity}x ${product.name} added to your cart.`,
+      title: "Added to Enquiry",
+      description: `${product.name} has been added. We'll follow up with pricing.`,
     });
   };
 
@@ -63,18 +81,17 @@ export default function ProductDetailPage() {
             {/* Image Gallery */}
             <div className="p-8 border-b md:border-b-0 md:border-r border-slate-200 bg-slate-50/50 flex flex-col items-center">
               <div className="relative aspect-square w-full max-w-md rounded-xl overflow-hidden bg-white border border-slate-200 mb-4">
-                <img src={product.images[activeImage]} alt={product.name} className="w-full h-full object-contain mix-blend-multiply p-4" />
-                {discount > 0 && (
-                  <div className="absolute top-4 left-4 bg-red-500 text-white font-bold px-3 py-1 rounded-md">
-                    -{discount}%
-                  </div>
-                )}
+                <img
+                  src={product.images[activeImage]}
+                  alt={product.name}
+                  className="w-full h-full object-contain p-4"
+                />
               </div>
               {product.images.length > 1 && (
                 <div className="flex gap-4">
                   {product.images.map((img, idx) => (
-                    <button 
-                      key={idx} 
+                    <button
+                      key={idx}
                       onClick={() => setActiveImage(idx)}
                       className={`w-20 h-20 rounded-md border-2 overflow-hidden bg-white ${activeImage === idx ? 'border-amber-500' : 'border-slate-200'}`}
                     >
@@ -86,113 +103,115 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Product Info */}
-            <div className="p-8 md:p-12">
+            <div className="p-8 md:p-12 flex flex-col">
               <div className="mb-2 text-sm text-slate-500 font-medium">SKU: {product.sku}</div>
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">{product.name}</h1>
-              
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
-                  ))}
-                </div>
-                <span className="text-sm text-amber-600 font-medium hover:underline cursor-pointer">
-                  {product.reviewsCount} Reviews
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">{product.name}</h1>
+
+              <div className="flex items-center gap-2 mb-6">
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${product.inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  {product.inStock && <Check className="w-4 h-4" />}
+                  {product.inStock ? 'In Stock' : 'Out of Stock'}
                 </span>
               </div>
 
-              <div className="mb-8">
-                <div className="flex items-end gap-3 mb-1">
-                  <span className="text-4xl font-bold text-slate-900">₹{product.price}</span>
-                  {product.originalPrice > product.price && (
-                    <span className="text-xl text-slate-400 line-through mb-1">₹{product.originalPrice}</span>
-                  )}
-                </div>
-                <p className="text-sm text-slate-500 font-medium">Inclusive of all taxes (GST 18%)</p>
+              {/* Pricing */}
+              <div className="mb-8 p-4 bg-amber-50 rounded-xl border border-amber-200">
+                <p className="text-sm font-semibold text-amber-700 mb-1">Pricing available on request</p>
+                <p className="text-xs text-amber-600">Contact us for institutional quotes, bulk pricing, and GST invoices.</p>
               </div>
 
-              <div className="flex items-center gap-3 mb-8">
-                <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${product.inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                  {product.inStock ? <Check className="w-4 h-4" /> : null}
-                  {product.inStock ? 'In Stock' : 'Out of Stock'}
-                </div>
-                <div className="text-sm text-slate-500">
-                  Ready to ship
-                </div>
+              {/* CTA Buttons */}
+              <div className="flex flex-col gap-3 mb-8">
+                <button
+                  onClick={handleAddEnquiry}
+                  className="w-full h-12 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-md flex items-center justify-center gap-2 transition-colors shadow-sm"
+                >
+                  Add to Enquiry
+                </button>
+                <a
+                  href="/contact"
+                  className="w-full h-12 border-2 border-slate-300 hover:border-amber-500 text-slate-700 hover:text-amber-700 font-semibold rounded-md flex items-center justify-center gap-2 transition-colors"
+                >
+                  Contact for Pricing
+                </a>
               </div>
 
-              {product.inStock && (
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="flex items-center border border-slate-300 rounded-md h-12 w-32 bg-white">
-                    <button 
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-10 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    <div className="flex-1 flex items-center justify-center font-semibold text-slate-900">
-                      {quantity}
-                    </div>
-                    <button 
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="w-10 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
-                  
-                  <button 
-                    onClick={handleAddToCart}
-                    className="flex-1 h-12 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-md flex items-center justify-center gap-2 transition-colors shadow-sm"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    Add to Cart
-                  </button>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-4 pt-6 border-t border-slate-200">
-                <div className="flex items-center gap-3 text-slate-600">
-                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
-                    <Truck className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <div className="text-sm">
-                    <div className="font-semibold text-slate-900">Fast Delivery</div>
-                    Ships in 24 hrs
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-slate-600">
-                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
-                    <Shield className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <div className="text-sm">
-                    <div className="font-semibold text-slate-900">Buyer Protection</div>
-                    7-day return policy
-                  </div>
-                </div>
+              {/* Contact Quick Links */}
+              <div className="pt-6 border-t border-slate-200 space-y-2">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Get in Touch</p>
+                <a
+                  href="mailto:admin@fusionprecisionperfect.com"
+                  className="flex items-center gap-2 text-sm text-slate-600 hover:text-amber-600 transition-colors"
+                >
+                  <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" />
+                  admin@fusionprecisionperfect.com
+                </a>
+                <a
+                  href="https://wa.me/918607620062"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm text-slate-600 hover:text-green-600 transition-colors"
+                >
+                  <span className="w-2 h-2 rounded-full bg-green-400 flex-shrink-0" />
+                  WhatsApp: +91 86076 20062
+                </a>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Catalogue Downloads */}
+        <div className="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+              <FileText className="w-5 h-5 text-amber-600" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">Product Catalogues</h2>
+              <p className="text-sm text-slate-500">Download full technical specifications and data sheets</p>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {catalogues.map((cat) => (
+              <a
+                key={cat.file}
+                href={cat.file}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-amber-400 hover:bg-amber-50 transition-all group"
+              >
+                <div className="w-12 h-12 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-6 h-6 text-red-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-slate-900 group-hover:text-amber-700 leading-snug">{cat.name}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">PDF Document</p>
+                </div>
+                <Download className="w-5 h-5 text-slate-400 group-hover:text-amber-500 flex-shrink-0 transition-colors" />
+              </a>
+            ))}
+          </div>
+        </div>
+
         {/* Tabbed Info */}
-        <div className="mt-12 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="flex border-b border-slate-200 overflow-x-auto">
-            {(['description', 'specs', 'reviews'] as const).map((tab) => (
+            {(['description', 'specs'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-8 py-4 font-semibold text-sm capitalize whitespace-nowrap transition-colors border-b-2 ${
-                  activeTab === tab 
-                    ? 'border-amber-500 text-amber-600' 
+                  activeTab === tab
+                    ? 'border-amber-500 text-amber-600'
                     : 'border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                {tab === 'specs' ? 'Specifications' : tab}
+                {tab === 'specs' ? 'Specifications' : 'Description'}
               </button>
             ))}
           </div>
-          
+
           <div className="p-8">
             {activeTab === 'description' && (
               <div className="prose max-w-none text-slate-600 leading-relaxed">
@@ -206,7 +225,7 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             )}
-            
+
             {activeTab === 'specs' && (
               <div className="overflow-hidden rounded-lg border border-slate-200">
                 <table className="w-full text-sm text-left">
@@ -219,14 +238,6 @@ export default function ProductDetailPage() {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            )}
-
-            {activeTab === 'reviews' && (
-              <div className="text-center py-12 text-slate-500">
-                <Star className="w-12 h-12 mx-auto text-slate-300 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">No written reviews yet</h3>
-                <p>Be the first to review this product after purchase.</p>
               </div>
             )}
           </div>

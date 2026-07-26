@@ -8,8 +8,13 @@ export default function AboutUsPage() {
       <section className="bg-slate-900 text-white py-20">
         <div className="container mx-auto px-4 text-center max-w-3xl">
           <div className="flex flex-col items-center mb-6">
-            <span className="text-[#C0392B] font-black text-4xl tracking-tight">FUSION</span>
-            <span className="text-amber-400 font-semibold text-sm tracking-[0.25em] uppercase">Precision Perfect</span>
+            <div className="bg-white rounded-xl px-6 py-3 shadow-lg inline-flex">
+              <img
+                src="/fusion-logo.png"
+                alt="Fusion Precision Perfect"
+                className="h-14 object-contain"
+              />
+            </div>
           </div>
           <h1 className="text-3xl md:text-5xl font-bold mb-6">High-Precision Calibration Instruments</h1>
           <p className="text-lg text-slate-300 leading-relaxed">
@@ -36,12 +41,14 @@ export default function AboutUsPage() {
                 </p>
               </div>
             </div>
-            <div className="flex-1">
-              <img
-                src="/products/f1000.jpg"
-                alt="F1000 Frequency Calibrator"
-                className="rounded-2xl shadow-xl w-full object-cover"
-              />
+            <div className="flex-1 flex items-center justify-center">
+              <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-12 flex items-center justify-center w-full max-w-sm">
+                <img
+                  src="/fusion-logo.png"
+                  alt="Fusion Precision Perfect"
+                  className="w-full max-w-[260px] object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
