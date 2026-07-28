@@ -1,0 +1,83 @@
+2339-    engines: {node: '>=0.10.0'}
+2340-
+2341-  leven@4.1.0:
+2342-    resolution: {integrity: sha512-KZ9W9nWDT7rF7Dazg8xyLHGLrmpgq2nVNFUckhqdW3szVP6YhCpp/RAnpmVExA9JvrMynjwSLVrEj3AepHR6ew==}
+2343-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+2344-
+2345-  lightningcss-linux-x64-gnu@1.32.0:
+2346-    resolution: {integrity: sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==}
+2347-    engines: {node: '>= 12.0.0'}
+2348-    cpu: [x64]
+2349-    os: [linux]
+2350-    libc: [glibc]
+2351-
+2352-  lightningcss-linux-x64-gnu@1.33.0:
+2353-    resolution: {integrity: sha512-ar+Ju7LmcN0Jo4FpL4hpFybwNG9/3A/Br5KW2n2jyODg3MEZXaDYADdemoNS+BDNfMgKvylJLj4S5tyRActuAg==}
+2354-    engines: {node: '>= 12.0.0'}
+2355-    cpu: [x64]
+2356-    os: [linux]
+2357-    libc: [glibc]
+2358-
+2359:  lightningcss@1.32.0:
+2360-    resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}
+2361-    engines: {node: '>= 12.0.0'}
+2362-
+2363-  lightningcss@1.33.0:
+2364-    resolution: {integrity: sha512-WkUDrojuJs0xkgGf2udWxa3yGBRxPtxUkB79i6aCZLRgc7PM8fZe9TosfPDcvEpQZbuFASnHYmRLBLUbmLOIIA==}
+2365-    engines: {node: '>= 12.0.0'}
+2366-
+2367-  linkify-it@5.0.2:
+2368-    resolution: {integrity: sha512-ONTm2jCMAVZjgQa/Fy1kScXsuOoF5NPTsoFBdE1KVIZ2vAh/r9+Bqo+0jINCBYnavTPQZz38QzFTme79ENoN3Q==}
+2369-
+2370-  locate-path@8.0.0:
+2371-    resolution: {integrity: sha512-XT9ewWAC43tiAV7xDAPflMkG0qOPn2QjHqlgX8FOqmWa/rxnyYDulF9T0F7tRy1u+TVTmK/M//6VIOye+2zDXg==}
+2372-    engines: {node: '>=20'}
+2373-
+2374-  lodash@4.18.1:
+2375-    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
+2376-
+2377-  loose-envify@1.4.0:
+2378-    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+2379-    hasBin: true
+--
+4841-  json-schema-traverse@1.0.0: {}
+4842-
+4843-  json5@2.2.3: {}
+4844-
+4845-  jsonfile@6.2.1:
+4846-    dependencies:
+4847-      universalify: 2.0.1
+4848-    optionalDependencies:
+4849-      graceful-fs: 4.2.11
+4850-
+4851-  jsonpointer@5.0.1: {}
+4852-
+4853-  leven@4.1.0: {}
+4854-
+4855-  lightningcss-linux-x64-gnu@1.32.0:
+4856-    optional: true
+4857-
+4858-  lightningcss-linux-x64-gnu@1.33.0:
+4859-    optional: true
+4860-
+4861:  lightningcss@1.32.0:
+4862-    dependencies:
+4863-      detect-libc: 2.1.2
+4864-    optionalDependencies:
+4865-      lightningcss-linux-x64-gnu: 1.32.0
+4866-
+4867-  lightningcss@1.33.0:
+4868-    dependencies:
+4869-      detect-libc: 2.1.2
+4870-    optionalDependencies:
+4871-      lightningcss-linux-x64-gnu: 1.33.0
+4872-
+4873-  linkify-it@5.0.2:
+4874-    dependencies:
+4875-      uc.micro: 2.1.0
+4876-
+4877-  locate-path@8.0.0:
+4878-    dependencies:
+4879-      p-locate: 6.0.0
+4880-
+4881-  lodash@4.18.1: {}
