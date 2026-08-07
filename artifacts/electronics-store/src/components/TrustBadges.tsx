@@ -17,11 +17,7 @@ const badges = [
     label: "Nationwide Delivery",
     sub: "Shipped across India",
   },
-  {
-    icon: <FileText className="w-6 h-6 text-amber-500" />,
-    label: "GST Invoice Available",
-    sub: "Suitable for institutional procurement",
-  },
+  
 ];
 
 export function TrustBadges() {

@@ -83,7 +83,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Fusion Precision Perfect. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs text-slate-500">
-            <span>GST Invoice Available</span>
+            
             <span className="w-1 h-1 rounded-full bg-slate-700"></span>
             <a href="https://fusionprecisionperfect.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">fusionprecisionperfect.com</a>
           </div>

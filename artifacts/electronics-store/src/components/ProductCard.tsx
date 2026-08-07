@@ -1,33 +1,22 @@
 import React from 'react';
 import { useLocation } from 'wouter';
 import { Product } from '../data/mockData';
-import { useCart } from '../context/CartContext';
-import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { addToCart } = useCart();
-  const { toast } = useToast();
   const [, navigate] = useLocation();
 
-  const handleEnquiry = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart({
-      productId: product.id,
-      name: product.name,
-      price: 0,
-      quantity: 1,
-      image: product.images[0],
-    });
-    toast({
-      title: "Added to Enquiry",
-      description: `${product.name} added. Contact us for pricing.`,
-    });
-  };
+ const handleEnquiry = (e: React.MouseEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  navigate(
+    `/contact?product=${encodeURIComponent(product.name)}`
+  );
+};
 
   return (
     <div
