@@ -120,11 +120,7 @@ export default function ContactUsPage() {
                 <div className="p-3 bg-amber-100 text-amber-600 rounded-lg flex-shrink-0">
                   <Clock className="w-6 h-6" />
                 </div>
-                <div>
-                  <h3 className="font-bold text-slate-900 mb-1">Operating Hours</h3>
-                  <p className="text-sm text-slate-600">Monday – Saturday</p>
-                  <p className="text-sm text-slate-600">10:00 AM – 9:00 PM IST</p>
-                </div>
+                
               </div>
             </div>
           </div>

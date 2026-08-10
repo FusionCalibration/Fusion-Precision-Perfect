@@ -30,15 +30,6 @@ export function ProductCard({ product }: ProductCardProps) {
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        {product.inStock ? (
-          <span className="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">
-            In Stock
-          </span>
-        ) : (
-          <span className="absolute top-3 left-3 bg-slate-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">
-            Out of Stock
-          </span>
-        )}
       </div>
 
       {/* Info */}
@@ -50,12 +41,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* CTA */}
         <div className="mt-auto space-y-2">
-          <div className="text-sm font-semibold text-slate-700">Contact for Pricing</div>
           <button
             onClick={handleEnquiry}
             className="w-full bg-amber-500 text-slate-900 font-bold text-sm py-2.5 rounded-md hover:bg-amber-400 transition-colors"
           >
-            Add Enquiry
+            For Enquiry
           </button>
         </div>
       </div>

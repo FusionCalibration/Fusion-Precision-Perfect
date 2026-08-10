@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useParams, Link } from "wouter";
+import { useParams, Link, useLocation } from "wouter";
 import { MOCK_PRODUCTS } from "../data/mockData";
 import { ProductCard } from "../components/ProductCard";
 import { useCart } from "../context/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight, Check, FileText, Download } from "lucide-react";
+import { ChevronRight, FileText, Download } from "lucide-react";
 
 // Map each product to which catalogues apply
 const PRODUCT_CATALOGUES: Record<string, { name: string; file: string }[]> = {
@@ -42,8 +42,9 @@ const ALL_CATALOGUES = [
 
 export default function ProductDetailPage() {
   const { id } = useParams();
-  const { addToCart } = useCart();
   const { toast } = useToast();
+  const { addToCart } = useCart();
+  const [, navigate] = useLocation();
 
   const product = MOCK_PRODUCTS.find((p) => p.id === id);
   const [activeImage, setActiveImage] = useState(0);
@@ -66,20 +67,24 @@ export default function ProductDetailPage() {
     (p) => p.category === product.category && p.id !== product.id,
   ).slice(0, 4);
   const catalogues = PRODUCT_CATALOGUES[product.id] ?? ALL_CATALOGUES;
-
   const handleAddEnquiry = () => {
-    addToCart({
-      productId: product.id,
-      name: product.name,
-      price: 0,
-      quantity: 1,
-      image: product.images[0],
-    });
-    toast({
-      title: "Added to Enquiry",
-      description: `${product.name} has been added. We'll follow up with pricing.`,
-    });
-  };
+  addToCart({
+    productId: product.id,
+    name: product.name,
+    price: 0,
+    quantity: 1,
+    image: product.images[0],
+  });
+
+  toast({
+    title: "Added to Enquiry",
+    description: `${product.name} has been added to your enquiry.`,
+  });
+
+  navigate("/contact");
+};
+
+
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
@@ -144,26 +149,7 @@ export default function ProductDetailPage() {
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
                 {product.name}
               </h1>
-
-              <div className="flex items-center gap-2 mb-6">
-                <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${product.inStock ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
-                >
-                  {product.inStock && <Check className="w-4 h-4" />}
-                  {product.inStock ? "In Stock" : "Out of Stock"}
-                </span>
-              </div>
-
-              {/* Pricing */}
-              <div className="mb-8 p-4 bg-amber-50 rounded-xl border border-amber-200">
-                <p className="text-sm font-semibold text-amber-700 mb-1">
-                  Pricing available on request
-                </p>
-                <p className="text-xs text-amber-600">
-                  Contact us for institutional quotes, bulk pricing, and GST
-                  invoices.
-                </p>
-              </div>
+              
 
               {/* CTA Buttons */}
               <div className="flex flex-col gap-3 mb-8">
@@ -173,12 +159,6 @@ export default function ProductDetailPage() {
                 >
                   Add to Enquiry
                 </button>
-                <a
-                  href="/contact"
-                  className="w-full h-12 border-2 border-slate-300 hover:border-amber-500 text-slate-700 hover:text-amber-700 font-semibold rounded-md flex items-center justify-center gap-2 transition-colors"
-                >
-                  Contact for Pricing
-                </a>
               </div>
 
               {/* Contact Quick Links */}
@@ -254,11 +234,10 @@ export default function ProductDetailPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-8 py-4 font-semibold text-sm capitalize whitespace-nowrap transition-colors border-b-2 ${
-                  activeTab === tab
+                className={`px-8 py-4 font-semibold text-sm capitalize whitespace-nowrap transition-colors border-b-2 ${activeTab === tab
                     ? "border-amber-500 text-amber-600"
                     : "border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-50"
-                }`}
+                  }`}
               >
                 {tab === "specs" ? "Specifications" : "Description"}
               </button>

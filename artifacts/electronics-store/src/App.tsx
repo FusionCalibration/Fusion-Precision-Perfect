@@ -12,7 +12,6 @@ import CategoryPage from './pages/CategoryPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import AboutUsPage from './pages/AboutUsPage';
 import ContactUsPage from './pages/ContactUsPage';
-import CartPage from './pages/CartPage';
 import NotFound from '@/pages/not-found';
 
 const queryClient = new QueryClient();
@@ -29,7 +28,7 @@ function Router() {
           <Route path="/category/:category" component={CategoryPage} />
           <Route path="/about" component={AboutUsPage} />
           <Route path="/contact" component={ContactUsPage} />
-          <Route path="/cart" component={CartPage} />
+          
           <Route component={NotFound} />
         </Switch>
       </main>

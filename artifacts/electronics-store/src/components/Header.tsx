@@ -106,14 +106,7 @@ export function Header() {
 
         {/* Cart */}
         <div className="flex items-center flex-shrink-0">
-          <Link href="/cart" className="p-2 text-amber-500 hover:text-amber-400 relative">
-            <ShoppingCart className="h-6 w-6" />
-            {getCartCount() > 0 && (
-              <span className="absolute top-0 right-0 translate-x-1 -translate-y-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                {getCartCount()}
-              </span>
-            )}
-          </Link>
+          
         </div>
       </div>
 

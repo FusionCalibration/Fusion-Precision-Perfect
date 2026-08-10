@@ -3,16 +3,6 @@ import { Clock, Shield, Truck, FileText } from 'lucide-react';
 
 const badges = [
   {
-    icon: <Clock className="w-6 h-6 text-amber-500" />,
-    label: "10am – 9pm Support",
-    sub: "Mon–Sat, IST",
-  },
-  {
-    icon: <Shield className="w-6 h-6 text-amber-500" />,
-    label: "Best-in-Class Accuracy",
-    sub: "±0.005% frequency | ±0.02% resistance",
-  },
-  {
     icon: <Truck className="w-6 h-6 text-amber-500" />,
     label: "Nationwide Delivery",
     sub: "Shipped across India",

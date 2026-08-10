@@ -21,7 +21,7 @@ export default function HomePage() {
       <section className="py-16 bg-slate-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">See Our Instruments in Action</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Most Demanding Temperature Calibration Software Based on ITS_90</h2>
             <p className="text-slate-400">Watch our latest demonstrations and product overviews</p>
           </div>
           <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
@@ -87,7 +87,9 @@ export default function HomePage() {
               <span className="font-black text-lg tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 animate-pulse">
                 Coming Soon
               </span>
-              <span className="text-xs text-slate-500 mt-2 text-center">New instruments in development</span>
+              <span className="text-xs text-slate-500 mt-2 text-center" style={{ textTransform: 'uppercase', fontFamily: 'monospace' }}>
+                Multiproduct Calibrator
+              </span>
             </div>
           </div>
         </div>

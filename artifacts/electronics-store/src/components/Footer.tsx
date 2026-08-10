@@ -10,10 +10,7 @@ export function Footer() {
 
           {/* Brand Info */}
           <div>
-            <div className="flex flex-col leading-none mb-6">
-              <span className="text-[#C0392B] font-black text-2xl tracking-tight">FUSION</span>
-              <span className="text-slate-400 font-semibold text-[10px] tracking-[0.15em] uppercase">Precision Perfect</span>
-            </div>
+            
             <p className="text-sm text-slate-400 leading-relaxed mb-6">
               High-precision calibration instruments. Trusted by professionals across laboratories and industries.
             </p>
@@ -37,7 +34,7 @@ export function Footer() {
               <li><Link href="/products" className="text-sm hover:text-amber-500 transition-colors">Product Details</Link></li>
               <li><Link href="/about" className="text-sm hover:text-amber-500 transition-colors">About Us</Link></li>
               <li><Link href="/contact" className="text-sm hover:text-amber-500 transition-colors">Contact Us</Link></li>
-              <li><Link href="/cart" className="text-sm hover:text-amber-500 transition-colors">Enquiry Cart</Link></li>
+            
             </ul>
           </div>
 
@@ -70,10 +67,7 @@ export function Footer() {
                 <Globe className="h-5 w-5 text-amber-500 flex-shrink-0" />
                 <a href="https://fusionprecisionperfect.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-amber-400 transition-colors">fusionprecisionperfect.com</a>
               </li>
-              <li className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-slate-400">Mon–Sat: 10:00 AM – 9:00 PM IST</span>
-              </li>
+              
             </ul>
           </div>
         </div>

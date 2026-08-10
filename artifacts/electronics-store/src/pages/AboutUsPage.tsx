@@ -7,27 +7,16 @@ export default function AboutUsPage() {
       {/* Hero Section */}
       <section className="bg-slate-900 text-white py-20">
         <div className="container mx-auto px-4 text-center max-w-3xl">
-          <div className="flex flex-col items-center mb-6">
-            <div className="bg-white rounded-xl px-6 py-3 shadow-lg inline-flex">
-              <img
-                src="/fusion-logo.png"
-                alt="Fusion Precision Perfect"
-                className="h-14 object-contain"
-              />
-            </div>
-          </div>
           <h1 className="text-3xl md:text-5xl font-bold mb-6">High-Precision Calibration Instruments</h1>
           <p className="text-lg text-slate-300 leading-relaxed">
-            Fusion Precision Perfect is an Indian manufacturer of professional-grade calibration instruments. We engineer frequency and resistance calibrators built to the highest accuracy standards, trusted by laboratories, service centres, and quality professionals across industries.
+            Fusion Precision Perfect is an Indian manufacturer of professional-grade calibration instruments. We engineer high precision calibration instruments built to the highest accuracy standards, trusted by laboratories, service centres, and quality professionals across industries.
           </p>
         </div>
       </section>
 
       {/* Story Section */}
       <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1">
+         <div className="flex-1">
               <h2 className="text-3xl font-bold text-slate-900 mb-6">Our Mission</h2>
               <div className="space-y-4 text-slate-600 leading-relaxed">
                 <p>
@@ -36,17 +25,6 @@ export default function AboutUsPage() {
                 
               </div>
             </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-12 flex items-center justify-center w-full max-w-sm">
-                <img
-                  src="/fusion-logo.png"
-                  alt="Fusion Precision Perfect"
-                  className="w-full max-w-[260px] object-contain"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Values */}
@@ -76,7 +54,6 @@ export default function AboutUsPage() {
               <div key={i} className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 text-center">
                 <div className="flex justify-center mb-4">{v.icon}</div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">{v.title}</h3>
-                <p className="text-slate-600 text-sm">{v.desc}</p>
               </div>
             ))}
           </div>
