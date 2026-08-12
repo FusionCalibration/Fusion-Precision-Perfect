@@ -45,6 +45,7 @@ export function Footer() {
               <li><Link href="/products/f1000" className="text-sm hover:text-amber-500 transition-colors">F1000 Frequency Calibrator</Link></li>
               <li><Link href="/products/r1000" className="text-sm hover:text-amber-500 transition-colors">R1000 Resistance Calibrator</Link></li>
               <li><Link href="/products/r1001" className="text-sm hover:text-amber-500 transition-colors">R1001 High Resistance Standard</Link></li>
+              <li><Link href="/products/r1002" className="text-sm hover:text-amber-500 transition-colors">Temperature Calibration Software</Link></li>
             </ul>
           </div>
 
