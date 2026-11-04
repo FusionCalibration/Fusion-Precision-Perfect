@@ -22,4 +22,15 @@ app.listen(port, (err) => {
   }
 
   logger.info({ port }, "Server listening");
+
+  void (async () => {
+    try {
+      const { pool } = await import("@workspace/db");
+      await pool.query("SELECT 1");
+
+      logger.info("Database connection verified successfully");
+    } catch {
+      logger.error("Database connection check failed");
+    }
+  })();
 });
