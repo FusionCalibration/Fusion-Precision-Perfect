@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://fusion-precision-perfect-api.onrender.com/api/$1"
+    }
+  ]
+}
