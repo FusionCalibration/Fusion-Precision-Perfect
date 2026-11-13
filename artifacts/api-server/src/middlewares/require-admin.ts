@@ -64,7 +64,8 @@ export async function requireAdmin(req: Request, res: Response, next: NextFuncti
       .set({ lastSeenAt: new Date() })
       .where(eq(adminSessions.id, session.sessionId));
     next();
-  } catch {
+    } catch (error) {
+    console.error("Admin verification failed:", error);
     res.status(500).json({ error: "Unable to verify admin access" });
   }
 }

@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'wouter';
-import { MOCK_PRODUCTS } from '../data/mockData';
+import { MOCK_PRODUCTS, type Product } from '../data/mockData';
 import { ProductCard } from '../components/ProductCard';
 import { ArrowRight, Youtube } from 'lucide-react';
 
-// All known Fusion Precision Perfect YouTube video IDs
 const YT_VIDEOS = [
   {
     id: 'e5K-EQZZntw',
@@ -14,22 +14,80 @@ const YT_VIDEOS = [
 
 const CHANNEL_URL = 'https://www.youtube.com/@FusionPrecisionPerfect';
 
+interface ApiProduct {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+  price: string | null;
+  imageUrl: string | null;
+  isActive: boolean;
+}
+
 export default function CategoryPage() {
   const { category } = useParams();
   const activeCategory = category ? decodeURIComponent(category) : null;
 
+  const [apiProducts, setApiProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProducts() {
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) throw new Error('Unable to load products');
+
+        const data = await response.json();
+        const products: ApiProduct[] = data.products ?? [];
+
+        const mappedProducts: Product[] = products
+          .filter((product) => product.isActive)
+          .map((product) => ({
+            id: String(product.id),
+            name: product.name,
+            category: product.category,
+            subcategory: '',
+            price: product.price ? Number(product.price) : 0,
+            originalPrice: 0,
+            rating: 0,
+            reviewsCount: 0,
+            inStock: true,
+            sku: `FPP-${product.id}`,
+            description: product.description ?? '',
+            specs: {},
+            images: product.imageUrl ? [product.imageUrl] : ['/products/f1000.jpg'],
+            tags: [],
+          }));
+
+        if (!cancelled) setApiProducts(mappedProducts);
+      } catch (error) {
+        console.error('Failed to load public products:', error);
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const allProducts = useMemo(
+    () => [...MOCK_PRODUCTS, ...apiProducts],
+    [apiProducts],
+  );
+
   const filteredProducts = useMemo(() => {
     if (activeCategory) {
-      return MOCK_PRODUCTS.filter(p => p.category === activeCategory);
+      return allProducts.filter((product) => product.category === activeCategory);
     }
-    return [...MOCK_PRODUCTS];
-  }, [activeCategory]);
+    return allProducts;
+  }, [activeCategory, allProducts]);
 
   return (
     <div className="bg-slate-50 min-h-screen py-8">
       <div className="container mx-auto px-4">
-
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">
             {activeCategory ? activeCategory : 'All Products'}
@@ -39,10 +97,9 @@ export default function CategoryPage() {
           </p>
         </div>
 
-        {/* Product Grid */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-            {filteredProducts.map(product => (
+            {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -56,7 +113,6 @@ export default function CategoryPage() {
           </div>
         )}
 
-        {/* ── YouTube Videos Section ───────────────────────────────── */}
         <div className="border-t border-slate-200 pt-16">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
@@ -78,7 +134,6 @@ export default function CategoryPage() {
             </a>
           </div>
 
-          {/* Video grid — playlist style */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             {YT_VIDEOS.map((video) => (
               <div
@@ -101,7 +156,6 @@ export default function CategoryPage() {
               </div>
             ))}
 
-            {/* "More on channel" placeholder card */}
             <a
               href={CHANNEL_URL}
               target="_blank"
@@ -121,7 +175,6 @@ export default function CategoryPage() {
             </a>
           </div>
 
-          {/* Mobile channel link */}
           <div className="mt-6 text-center sm:hidden">
             <a
               href={CHANNEL_URL}
@@ -133,7 +186,6 @@ export default function CategoryPage() {
             </a>
           </div>
         </div>
-
       </div>
     </div>
   );

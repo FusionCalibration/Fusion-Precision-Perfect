@@ -1,8 +1,9 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { TrustBadges } from '../components/TrustBadges';
 import { ProductCard } from '../components/ProductCard';
-import { MOCK_PRODUCTS } from '../data/mockData';
+import { MOCK_PRODUCTS, type Product } from '../data/mockData';
 import { ArrowRight, Zap, Gauge, Sparkles } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -11,7 +12,66 @@ const categoryIcons: Record<string, React.ReactNode> = {
   "Resistance Calibrators": <Gauge className="w-8 h-8" />,
 };
 
+interface ApiProduct {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+  price: string | null;
+  imageUrl: string | null;
+  isActive: boolean;
+}
+
 export default function HomePage() {
+  const [apiProducts, setApiProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProducts() {
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) throw new Error('Unable to load products');
+
+        const data = await response.json();
+        const products: ApiProduct[] = data.products ?? [];
+
+        const mappedProducts: Product[] = products
+          .filter((product) => product.isActive)
+          .map((product) => ({
+            id: String(product.id),
+            name: product.name,
+            category: product.category,
+            subcategory: '',
+            price: product.price ? Number(product.price) : 0,
+            originalPrice: 0,
+            rating: 0,
+            reviewsCount: 0,
+            inStock: true,
+            sku: `FPP-${product.id}`,
+            description: product.description ?? '',
+            specs: {},
+            images: product.imageUrl
+              ? [product.imageUrl]
+              : ['/products/f1000.jpg'],
+            tags: [],
+          }));
+
+        if (!cancelled) setApiProducts(mappedProducts);
+      } catch (error) {
+        console.error('Failed to load homepage products:', error);
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const allProducts = [...MOCK_PRODUCTS, ...apiProducts];
+
   return (
     <div className="min-h-screen bg-slate-50">
       <HeroCarousel />
@@ -21,7 +81,7 @@ export default function HomePage() {
       <section className="py-16 bg-slate-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Most Demanding Temperature Calibration Software Based on ITS_90</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Most Demanding Temperature Calibration Software Basedon ITS_90</h2>
             <p className="text-slate-400">Watch our latest demonstrations and product overviews</p>
           </div>
           <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
@@ -59,7 +119,6 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
-            {/* Real categories */}
             {['Frequency Calibrators', 'Resistance Calibrators'].map(category => (
               <Link
                 key={category}
@@ -73,17 +132,13 @@ export default function HomePage() {
               </Link>
             ))}
 
-            {/* Coming Soon card */}
             <div className="flex flex-col items-center justify-center p-8 bg-slate-900 rounded-xl border border-slate-700 relative overflow-hidden cursor-default select-none">
-              {/* Shimmer pulse background */}
               <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-amber-600/10 animate-pulse" />
-              {/* Orbit ring */}
               <div className="relative mb-4">
                 <div className="w-12 h-12 rounded-full border-2 border-amber-500/30 flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-amber-400 animate-spin" style={{ animationDuration: '4s' }} />
                 </div>
               </div>
-              {/* Animated text */}
               <span className="font-black text-lg tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 animate-pulse">
                 Coming Soon
               </span>
@@ -104,7 +159,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {MOCK_PRODUCTS.map(product => (
+            {allProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

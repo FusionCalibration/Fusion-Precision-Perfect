@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, Link, useLocation } from "wouter";
-import { MOCK_PRODUCTS } from "../data/mockData";
+import { MOCK_PRODUCTS, type Product } from "../data/mockData";
 import { ProductCard } from "../components/ProductCard";
 import { useCart } from "../context/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronRight, FileText, Download } from "lucide-react";
 
-// Map each product to which catalogues apply
 const PRODUCT_CATALOGUES: Record<string, { name: string; file: string }[]> = {
   f1000: [
     {
@@ -28,7 +28,6 @@ const PRODUCT_CATALOGUES: Record<string, { name: string; file: string }[]> = {
   ],
 };
 
-// Fallback: show both for unknown products
 const ALL_CATALOGUES = [
   {
     name: "F1000 Digital Frequency Calibrator – Product Catalogue",
@@ -40,17 +39,138 @@ const ALL_CATALOGUES = [
   },
 ];
 
+interface ApiProduct {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+  price: string | null;
+  imageUrl: string | null;
+  isActive: boolean;
+}
+
 export default function ProductDetailPage() {
   const { id } = useParams();
   const { toast } = useToast();
   const { addToCart } = useCart();
   const [, navigate] = useLocation();
 
-  const product = MOCK_PRODUCTS.find((p) => p.id === id);
+  const existingProduct = MOCK_PRODUCTS.find((p) => p.id === id);
+
+  const [apiProduct, setApiProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [activeTab, setActiveTab] = useState<"description" | "specs">(
     "description",
   );
+
+  useEffect(() => {
+    setActiveImage(0);
+    setApiProduct(null);
+
+    if (!id || existingProduct) {
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadProduct() {
+      setLoading(true);
+
+      try {
+        const response = await fetch("/api/products");
+
+        if (!response.ok) {
+          throw new Error("Unable to load product");
+        }
+
+        const data = await response.json();
+        const products: ApiProduct[] = data.products ?? [];
+
+        const found = products.find(
+          (product) => String(product.id) === id && product.isActive,
+        );
+
+        if (found && !cancelled) {
+          setApiProduct({
+            id: String(found.id),
+            name: found.name,
+            category: found.category,
+            subcategory: "",
+            price: found.price ? Number(found.price) : 0,
+            originalPrice: 0,
+            rating: 0,
+            reviewsCount: 0,
+            inStock: true,
+            sku: `FPP-${found.id}`,
+            description: found.description ?? "",
+            specs: {},
+            images: found.imageUrl
+              ? [found.imageUrl]
+              : ["/products/f1000.jpg"],
+            tags: [],
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load product details:", error);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadProduct();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, existingProduct]);
+
+  const product = existingProduct ?? apiProduct;
+
+  const allProducts = useMemo(
+    () => [...MOCK_PRODUCTS, ...(apiProduct ? [apiProduct] : [])],
+    [apiProduct],
+  );
+
+  const relatedProducts = product
+    ? allProducts
+        .filter(
+          (p) => p.category === product.category && p.id !== product.id,
+        )
+        .slice(0, 4)
+    : [];
+
+  const catalogues = product
+    ? PRODUCT_CATALOGUES[product.id] ?? ALL_CATALOGUES
+    : [];
+
+  const handleAddEnquiry = () => {
+    if (!product) return;
+
+    addToCart({
+      productId: product.id,
+      name: product.name,
+      price: 0,
+      quantity: 1,
+      image: product.images[0],
+    });
+
+    toast({
+      title: "Added to Enquiry",
+      description: `${product.name} has been added to your enquiry.`,
+    });
+
+    navigate("/contact");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center text-slate-500">
+        Loading product...
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -63,32 +183,8 @@ export default function ProductDetailPage() {
     );
   }
 
-  const relatedProducts = MOCK_PRODUCTS.filter(
-    (p) => p.category === product.category && p.id !== product.id,
-  ).slice(0, 4);
-  const catalogues = PRODUCT_CATALOGUES[product.id] ?? ALL_CATALOGUES;
-  const handleAddEnquiry = () => {
-  addToCart({
-    productId: product.id,
-    name: product.name,
-    price: 0,
-    quantity: 1,
-    image: product.images[0],
-  });
-
-  toast({
-    title: "Added to Enquiry",
-    description: `${product.name} has been added to your enquiry.`,
-  });
-
-  navigate("/contact");
-};
-
-
-
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
-      {/* Breadcrumbs */}
       <div className="bg-white border-b border-slate-200 py-4">
         <div className="container mx-auto px-4 flex items-center gap-2 text-sm text-slate-500">
           <Link href="/" className="hover:text-amber-600">
@@ -100,7 +196,7 @@ export default function ProductDetailPage() {
           </Link>
           <ChevronRight className="w-4 h-4" />
           <Link
-            href={`/category/${product.category}`}
+            href={`/category/${encodeURIComponent(product.category)}`}
             className="hover:text-amber-600"
           >
             {product.category}
@@ -113,22 +209,26 @@ export default function ProductDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="grid md:grid-cols-2 gap-0">
-            {/* Image Gallery */}
             <div className="p-8 border-b md:border-b-0 md:border-r border-slate-200 bg-slate-50/50 flex flex-col items-center">
               <div className="relative aspect-square w-full max-w-md rounded-xl overflow-hidden bg-white border border-slate-200 mb-4">
                 <img
-                  src={product.images[activeImage]}
+                  src={product.images[activeImage] || "/products/f1000.jpg"}
                   alt={product.name}
                   className="w-full h-full object-contain p-4"
                 />
               </div>
+
               {product.images.length > 1 && (
                 <div className="flex gap-4">
                   {product.images.map((img, idx) => (
                     <button
                       key={idx}
                       onClick={() => setActiveImage(idx)}
-                      className={`w-20 h-20 rounded-md border-2 overflow-hidden bg-white ${activeImage === idx ? "border-amber-500" : "border-slate-200"}`}
+                      className={`w-20 h-20 rounded-md border-2 overflow-hidden bg-white ${
+                        activeImage === idx
+                          ? "border-amber-500"
+                          : "border-slate-200"
+                      }`}
                     >
                       <img
                         src={img}
@@ -141,17 +241,15 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-            {/* Product Info */}
             <div className="p-8 md:p-12 flex flex-col">
               <div className="mb-2 text-sm text-slate-500 font-medium">
                 SKU: {product.sku}
               </div>
+
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
                 {product.name}
               </h1>
-              
 
-              {/* CTA Buttons */}
               <div className="flex flex-col gap-3 mb-8">
                 <button
                   onClick={handleAddEnquiry}
@@ -161,11 +259,11 @@ export default function ProductDetailPage() {
                 </button>
               </div>
 
-              {/* Contact Quick Links */}
               <div className="pt-6 border-t border-slate-200 space-y-2">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
                   Get in Touch
                 </p>
+
                 <a
                   href="mailto:admin@fusionprecisionperfect.com"
                   className="flex items-center gap-2 text-sm text-slate-600 hover:text-amber-600 transition-colors"
@@ -173,6 +271,7 @@ export default function ProductDetailPage() {
                   <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" />
                   admin@fusionprecisionperfect.com
                 </a>
+
                 <a
                   href="https://wa.me/918607620062"
                   target="_blank"
@@ -187,7 +286,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Catalogue Downloads */}
         <div className="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
@@ -202,6 +300,7 @@ export default function ProductDetailPage() {
               </p>
             </div>
           </div>
+
           <div className="grid sm:grid-cols-2 gap-4">
             {catalogues.map((cat) => (
               <a
@@ -219,7 +318,9 @@ export default function ProductDetailPage() {
                   <p className="text-sm font-semibold text-slate-900 group-hover:text-amber-700 leading-snug">
                     {cat.name}
                   </p>
-                  <p className="text-xs text-slate-400 mt-0.5">PDF Document</p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    PDF Document
+                  </p>
                 </div>
                 <Download className="w-5 h-5 text-slate-400 group-hover:text-amber-500 flex-shrink-0 transition-colors" />
               </a>
@@ -227,17 +328,17 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Tabbed Info */}
         <div className="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="flex border-b border-slate-200 overflow-x-auto">
             {(["description", "specs"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-8 py-4 font-semibold text-sm capitalize whitespace-nowrap transition-colors border-b-2 ${activeTab === tab
+                className={`px-8 py-4 font-semibold text-sm capitalize whitespace-nowrap transition-colors border-b-2 ${
+                  activeTab === tab
                     ? "border-amber-500 text-amber-600"
                     : "border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-50"
-                  }`}
+                }`}
               >
                 {tab === "specs" ? "Specifications" : "Description"}
               </button>
@@ -263,27 +364,32 @@ export default function ProductDetailPage() {
 
             {activeTab === "specs" && (
               <div className="overflow-hidden rounded-lg border border-slate-200">
-                <table className="w-full text-sm text-left">
-                  <tbody>
-                    {Object.entries(product.specs).map(([key, value], idx) => (
-                      <tr
-                        key={key}
-                        className={idx % 2 === 0 ? "bg-slate-50" : "bg-white"}
-                      >
-                        <th className="px-6 py-4 font-semibold text-slate-900 border-r border-slate-200 w-1/3">
-                          {key}
-                        </th>
-                        <td className="px-6 py-4 text-slate-600">{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                {Object.keys(product.specs).length > 0 ? (
+                  <table className="w-full text-sm text-left">
+                    <tbody>
+                      {Object.entries(product.specs).map(([key, value], idx) => (
+                        <tr
+                          key={key}
+                          className={idx % 2 === 0 ? "bg-slate-50" : "bg-white"}
+                        >
+                          <th className="px-6 py-4 font-semibold text-slate-900 border-r border-slate-200 w-1/3">
+                            {key}
+                          </th>
+                          <td className="px-6 py-4 text-slate-600">{value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="p-6 text-slate-500">
+                    Specifications have not been added for this product yet.
+                  </p>
+                )}
               </div>
             )}
           </div>
         </div>
 
-        {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="mt-16">
             <h2 className="text-2xl font-bold text-slate-900 mb-8">
